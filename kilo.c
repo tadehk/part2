@@ -160,7 +160,6 @@ int editorReadKey() {
   while ((nread = read(STDIN_FILENO, &c, 1)) != 1) {
     if (nread == -1 && errno != EAGAIN) die("read");
   }
-
   if (c == '\x1b') {
     char seq[3];
     if (read(STDIN_FILENO, &seq[0], 1) != 1) return '\x1b';
@@ -187,17 +186,17 @@ int editorReadKey() {
           case 'D': return ARROW_LEFT;
           case 'H': return HOME_KEY;
           case 'F': return END_KEY;
+        }
       }
-    }
-  } else if (seq[0] == 'O') {
+    } else if (seq[0] == 'O') {
       switch (seq[1]) {
         case 'H': return HOME_KEY;
         case 'F': return END_KEY;
       }
-
+    }
     return '\x1b';
   } else {
-  return c;
+    return c;
   }
 }
 
@@ -356,10 +355,9 @@ int editorSyntaxToColor(int hl) {
   switch (hl) {
     case HL_COMMENT:
     case HL_MLCOMMENT: return 36;
-    case HL_COMMENT: return 36;
-    case HL_STRING: return 35;
     case HL_KEYWORD1: return 33;
     case HL_KEYWORD2: return 32;
+    case HL_STRING: return 35;
     case HL_NUMBER: return 31;
     case HL_MATCH: return 34;
     default: return 37;
@@ -582,7 +580,6 @@ void editorOpen(char *filename) {
   size_t linecap = 0;
   ssize_t linelen;
   while ((linelen = getline(&line, &linecap, fp)) != -1) {
-  if (linelen != -1) {
     while (linelen > 0 && (line[linelen - 1] == '\n' ||
                            line[linelen - 1] == '\r'))
       linelen--;
